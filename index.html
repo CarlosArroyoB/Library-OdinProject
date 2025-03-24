@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1 >Libreria</h1> 
+    <button id="nuevoLibro"> Nuevo libro</button>
+    <dialog id="modal">
+        <form class="formulario" id="formulario">
+            <h2>Agregar libro</h2>
+        <input type="text" id="titulo" placeholder="titulo" required> <br>
+        <input type="text" id="autor" placeholder="autor" required> <br>
+        <input type="number" id="paginas" placeholder="Nro. Paginas" required> <br>
+        <input type="checkbox" id="leido"> <label for="leido">Leido</label> <br>
+        <button id="agregarLibro">Agregar</button>
+        <button id="cerrarModal">Cerrar</button>
+        </form>
+    </dialog>  
+    <div class="container" id="libreria"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,148 +1,27 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        .card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            width: 200px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            margin-top: 10px;
-            cursor: pointer;
-            padding: 5px;
-        }
-        dialog {
-            padding: 20px;
-            border-radius: 8px;
-            border: none;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <h1>Biblioteca</h1>
-    <button id="nuevoLibroBtn">Nuevo Libro</button>
-    
+    <h1 >Libreria</h1> 
+    <button id="nuevoLibro"> Nuevo libro</button>
     <dialog id="modal">
-        <form id="formulario">
-            <h2>Agregar Libro</h2>
-            <input type="text" id="titulo" placeholder="Título" required> <br><br>
-            <input type="text" id="autor" placeholder="Autor" required> <br><br>
-            <input type="number" id="paginas" placeholder="Número de páginas" required> <br><br>
-            <label>
-                <input type="checkbox" id="leido"> ¿Leído?
-            </label> <br><br>
-            <button type="submit">Añadir</button>
-            <button type="button" id="cerrarModal">Cerrar</button>
+        <form class="formulario" id="formulario">
+            <h2>Agregar libro</h2>
+        <input type="text" id="titulo" placeholder="titulo" required> <br>
+        <input type="text" id="autor" placeholder="autor" required> <br>
+        <input type="number" id="paginas" placeholder="Nro. Paginas" required> <br>
+        <input type="checkbox" id="leido"> <label for="leido">Leido</label> <br>
+        <button id="submit">Agregar</button>
+        <button id="cerrarModal">Cerrar</button>
         </form>
-    </dialog>
-
+    </dialog>  
     <div class="container" id="libreria"></div>
 
-    <script>
-        const libreria = [];
-
-        function Book(titulo, autor, paginas, leido) {
-            this.id = crypto.randomUUID();
-            this.titulo = titulo;
-            this.autor = autor;
-            this.paginas = paginas;
-            this.leido = leido;
-        }
-
-        Book.prototype.toggleRead = function() {
-            this.leido = !this.leido;
-        };
-
-        function addBookToLibrary(titulo, autor, paginas, leido) {
-            const nuevoLibro = new Book(titulo, autor, paginas, leido);
-            libreria.push(nuevoLibro);
-            renderBooks();
-        }
-
-        function renderBooks() {
-            const container  = document.getElementById("libreria");
-            container.innerHTML = ""; // Limpiar antes de renderizar
-
-            libreria.forEach(libro => {
-                const card = document.createElement("div");
-                card.classList.add("card");
-                card.setAttribute("data-id", libro.id);
-
-                card.innerHTML = `
-                    <h3>${libro.titulo}</h3>
-                    <p><strong>Autor:</strong> ${libro.autor}</p>
-                    <p><strong>Páginas:</strong> ${libro.paginas}</p>
-                    <p><strong>Estado:</strong> ${libro.leido ? "Leído ✅" : "No leído ❌"}</p>
-                    <button class="toggleReadBtn">Cambiar estado</button>
-                    <button class="deleteBtn">Eliminar</button>
-                `;
-
-                container.appendChild(card);
-
-                // Botón para cambiar estado de lectura
-                card.querySelector(".toggleReadBtn").addEventListener("click", () => {
-                    libro.toggleRead();
-                    renderBooks();
-                });
-
-                // Botón para eliminar libro
-                card.querySelector(".deleteBtn").addEventListener("click", () => {
-                    removeBook(libro.id);
-                });
-            });
-        }
-
-        function removeBook(id) {
-            const index = libreria.findIndex(libro => libro.id === id);
-            if (index !== -1) {
-                libreria.splice(index, 1);
-                renderBooks();
-            }
-        }
-
-        // Modal de formulario
-        const modal = document.getElementById("modal");
-        document.getElementById("nuevoLibroBtn").addEventListener("click", () => modal.showModal());
-        document.getElementById("cerrarModal").addEventListener("click", () => modal.close());
-
-        document.getElementById("formulario").addEventListener("submit", function(event) {
-            event.preventDefault(); // Evitar recarga de la página
-
-            const titulo = document.getElementById("titulo").value;
-            const autor = document.getElementById("autor").value;
-            const paginas = document.getElementById("paginas").value;
-            const leido = document.getElementById("leido").checked;
-
-            addBookToLibrary(titulo, autor, paginas, leido);
-
-            // Limpiar formulario y cerrar modal
-            this.reset();
-            modal.close();
-        });
-
-        // Agregar libros de prueba
-        addBookToLibrary("El señor de los anillos", "J.R.R. Tolkien", 1178, true);
-        addBookToLibrary("1984", "George Orwell", 328, false);
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@ function renderBooks (){
     const container = document.getElementById('libreria')
     container.innerHTML = '';
 
-    libreria.forEach(libro =>{
+    myLibrary.forEach(libro =>{
         const card = document.createElement("div");
         card.classList.add('card'); 
         card.setAttribute('data-id', libro.id);
@@ -36,13 +36,13 @@ function renderBooks (){
         `;
         container.appendChild(card);
 
-        card.querySelector('leidoBtn').addEventListener('click', () => {
+        card.querySelector('.leidoBtn').addEventListener('click', () => {
             libro.toggleRead();
             renderBooks();
         });
 
-        card.querySelector('eliminarBtn').addEventListener('click', () => {
-            libro.deleteBook();
+        card.querySelector('.eliminarBtn').addEventListener('click', () => {
+            deleteBook(libro.id);
             renderBooks();  
         });
     })
@@ -70,7 +70,7 @@ cerrarModal.addEventListener("click", () => {
     modal.close(); // Cierra el modal
 });
 
-formulario.addEventListener("submit", (event) => {
+formulario.addEventListener("submit", function(event) {
     event.preventDefault();
     const titulo = document.getElementById("titulo").value;
     const autor = document.getElementById("autor").value;
@@ -78,7 +78,10 @@ formulario.addEventListener("submit", (event) => {
     const leido = document.getElementById("leido").checked;
 
     addBookToLibrary(titulo,autor,paginas,leido);
+
     this.reset();
     modal.close();
-
 })
+
+addBookToLibrary("El señor de los anillos", "J.R.R. Tolkien", 1178, true);
+addBookToLibrary("1984", "George Orwell", 328, false);

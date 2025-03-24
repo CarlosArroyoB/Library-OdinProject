@@ -1,0 +1,59 @@
+body{
+    background-color: #C4A484;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#nuevoLibro{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    height: 2em;
+    width: 10em;
+    cursor: pointer;
+}
+#nuevoLibro:hover{
+    background-color: #e2d3d3;
+}
+
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1em;
+    margin: 1em;
+    max-width: 80em;
+    gap: 1em;
+    background-color: #C4A484;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 1em;
+    width: 10em;
+    height: 18em;
+    background-color: #8D341F;
+    border-right: 25px solid #ffffff;
+}
+.eliminarBtn{
+    background-color: rgb(255, 124, 124);
+    border: .5px solid black;
+    border-radius: 2em;
+}
+.leidoBtn{
+    background-color: rgb(155, 241, 155);
+    border: .5px solid black;
+    border-radius: 2em;
+}

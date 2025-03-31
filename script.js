@@ -1,15 +1,16 @@
 const myLibrary = []
 
-function Book (titulo, autor, paginas, leido){
+class Book {
+    constructor(titulo, autor, paginas, leido){
     this.id = crypto.randomUUID();
     this.titulo = titulo;
     this.autor = autor;
     this.paginas = paginas;
     this.leido = leido;
-}
-
-Book.prototype.toggleRead = function (){
-    this.leido = !this.leido;
+    }
+    toggleRead() {
+        this.leido = !this.leido;
+    }
 }
 function addBookToLibrary(titulo,autor,paginas,leido){
     const newBook = new Book(titulo,autor,paginas,leido);

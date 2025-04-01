@@ -1,75 +1,74 @@
-const myLibrary = []
-
 class Book {
-    constructor(titulo, autor, paginas, leido){
-    this.id = crypto.randomUUID();
-    this.titulo = titulo;
-    this.autor = autor;
-    this.paginas = paginas;
-    this.leido = leido;
+    constructor(titulo, autor, paginas, leido) {
+        this.id = crypto.randomUUID();
+        this.titulo = titulo;
+        this.autor = autor;
+        this.paginas = paginas;
+        this.leido = leido;
     }
+
     toggleRead() {
         this.leido = !this.leido;
     }
 }
-function addBookToLibrary(titulo,autor,paginas,leido){
-    const newBook = new Book(titulo,autor,paginas,leido);
-    myLibrary.push(newBook);
-    renderBooks();
-}
 
-function renderBooks (){
-    const container = document.getElementById('libreria')
-    container.innerHTML = '';
+class Library {
+    constructor() {
+        this.books = [];
+    }
 
-    myLibrary.forEach(libro =>{
-        const card = document.createElement("div");
-        card.classList.add('card'); 
-        card.setAttribute('data-id', libro.id);
+    addBook(titulo, autor, paginas, leido) {
+        const newBook = new Book(titulo, autor, paginas, leido);
+        this.books.push(newBook);
+        this.renderBooks();
+    }
 
-        card.innerHTML = `
-        <h2>${libro.titulo}</h2>
-        <p><strong>Autor: </strong> ${libro.autor}</p>
-        <p><strong>Paginas: </strong> ${libro.paginas}</p>
-        <p> <strong>Estado: </strong> ${libro.leido ? 'Leído' : 'No leído'}</p>
-        <button class="leidoBtn">Cambiar estado</button>
-        <button class="eliminarBtn">Eliminar</button> 
-        `;
-        container.appendChild(card);
+    deleteBook(id) {
+        this.books = this.books.filter(book => book.id !== id);
+        this.renderBooks();
+    }
 
-        card.querySelector('.leidoBtn').addEventListener('click', () => {
-            libro.toggleRead();
-            renderBooks();
+    renderBooks() {
+        const container = document.getElementById('libreria');
+        container.innerHTML = '';
+
+        this.books.forEach(book => {
+            const card = document.createElement("div");
+            card.classList.add('card');
+            card.setAttribute('data-id', book.id);
+
+            card.innerHTML = `
+                <h2>${book.titulo}</h2>
+                <p><strong>Autor:</strong> ${book.autor}</p>
+                <p><strong>Páginas:</strong> ${book.paginas}</p>
+                <p><strong>Estado:</strong> ${book.leido ? 'Leído' : 'No leído'}</p>
+                <button class="leidoBtn">Cambiar estado</button>
+                <button class="eliminarBtn">Eliminar</button>
+            `;
+            container.appendChild(card);
+
+            card.querySelector('.leidoBtn').addEventListener('click', () => {
+                book.toggleRead();
+                this.renderBooks();
+            });
+
+            card.querySelector('.eliminarBtn').addEventListener('click', () => {
+                this.deleteBook(book.id);
+            });
         });
-
-        card.querySelector('.eliminarBtn').addEventListener('click', () => {
-            deleteBook(libro.id);
-            renderBooks();  
-        });
-    })
-    
+    }
 }
 
-function deleteBook(id){
-    const index = myLibrary.findIndex(libro => libro.id === id);
-    myLibrary.splice(index, 1);
-}
+const myLibrary = new Library();
 
-//modal de formulario
+// Modal de formulario
 const modal = document.getElementById("modal");
 const cerrarModal = document.getElementById("cerrarModal");
 const nuevoLibroBtn = document.getElementById("nuevoLibro");
 const formulario = document.getElementById("formulario");
 
-
-nuevoLibroBtn.addEventListener("click", () => {
-    modal.showModal(); // Abre el modal
-    
-});
-
-cerrarModal.addEventListener("click", () => {
-    modal.close(); // Cierra el modal
-});
+nuevoLibroBtn.addEventListener("click", () => modal.showModal());
+cerrarModal.addEventListener("click", () => modal.close());
 
 formulario.addEventListener("submit", function(event) {
     event.preventDefault();
@@ -78,11 +77,11 @@ formulario.addEventListener("submit", function(event) {
     const paginas = document.getElementById("paginas").value;
     const leido = document.getElementById("leido").checked;
 
-    addBookToLibrary(titulo,autor,paginas,leido);
-
+    myLibrary.addBook(titulo, autor, paginas, leido);
     this.reset();
     modal.close();
-})
+});
 
-addBookToLibrary("El señor de los anillos", "J.R.R. Tolkien", 1178, true);
-addBookToLibrary("1984", "George Orwell", 328, false);
+// Agregar libros de ejemplo
+myLibrary.addBook("El señor de los anillos", "J.R.R. Tolkien", 1178, true);
+myLibrary.addBook("1984", "George Orwell", 328, false);

@@ -15,27 +15,16 @@ class Book {
 class Library {
     constructor() {
         this.books = [];
-        this.observers = [];
-    }
-
-    addObserver(observer) {
-        this.observers.push(observer);
-    }
-
-    notifyObservers() {
-        this.observers.forEach(observer => observer.update());
     }
 
     addBook(titulo, autor, paginas, leido) {
         const newBook = new Book(titulo, autor, paginas, leido);
         this.books.push(newBook);
-        this.notifyObservers();
         return newBook;
     }
 
     deleteBook(id) {
         this.books = this.books.filter(book => book.id !== id);
-        this.notifyObservers();
     }
 
     getBooks() {
@@ -46,7 +35,6 @@ class Library {
         const book = this.books.find(book => book.id === id);
         if (book) {
             book.toggleRead();
-            this.notifyObservers();
         }
     }
 }
@@ -55,10 +43,6 @@ class LibraryView {
     constructor(library) {
         this.library = library;
         this.container = document.getElementById('libreria');
-    }
-
-    update() {
-        this.renderBooks();
     }
 
     renderBooks() {
@@ -74,14 +58,49 @@ class LibraryView {
         card.classList.add('card');
         card.setAttribute('data-id', book.id);
 
-        card.innerHTML = `
-            <h2>${book.titulo}</h2>
-            <p><strong>Autor: </strong> ${book.autor}</p>
-            <p><strong>Páginas: </strong> ${book.paginas}</p>
-            <p><strong>Estado: </strong> ${book.leido ? 'Leído' : 'No leído'}</p>
-            <button class="leidoBtn">Cambiar estado</button>
-            <button class="eliminarBtn">Eliminar</button>
-        `;
+        // Create title
+        const title = document.createElement('h2');
+        title.textContent = book.titulo;
+
+        // Create author paragraph
+        const authorP = document.createElement('p');
+        const authorStrong = document.createElement('strong');
+        authorStrong.textContent = 'Autor: ';
+        authorP.appendChild(authorStrong);
+        authorP.appendChild(document.createTextNode(book.autor));
+
+        // Create pages paragraph
+        const pagesP = document.createElement('p');
+        const pagesStrong = document.createElement('strong');
+        pagesStrong.textContent = 'Páginas: ';
+        pagesP.appendChild(pagesStrong);
+        pagesP.appendChild(document.createTextNode(book.paginas));
+
+        // Create status paragraph
+        const statusP = document.createElement('p');
+        const statusStrong = document.createElement('strong');
+        statusStrong.textContent = 'Estado: ';
+        statusP.appendChild(statusStrong);
+        statusP.appendChild(document.createTextNode(book.leido ? 'Leído' : 'No leído'));
+
+        // Create buttons
+        const readBtn = document.createElement('button');
+        readBtn.textContent = 'Cambiar estado';
+        readBtn.classList.add('leidoBtn');
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Eliminar';
+        deleteBtn.classList.add('eliminarBtn');
+
+        // Append all elements
+        card.append(
+            title,
+            authorP,
+            pagesP,
+            statusP,
+            readBtn,
+            deleteBtn
+        );
 
         this.setupCardEventListeners(card, book.id);
         return card;
@@ -90,22 +109,25 @@ class LibraryView {
     setupCardEventListeners(card, bookId) {
         card.querySelector('.leidoBtn').addEventListener('click', () => {
             this.library.toggleBookRead(bookId);
+            this.renderBooks(); 
         });
 
         card.querySelector('.eliminarBtn').addEventListener('click', () => {
             this.library.deleteBook(bookId);
+            this.renderBooks();
         });
     }
 }
 
 class ModalController {
-    constructor(library) {
+    constructor(library, libraryView) {
         this.library = library;
+        this.libraryView = libraryView;
         this.modal = document.getElementById("modal");
         this.cerrarModal = document.getElementById("cerrarModal");
         this.nuevoLibroBtn = document.getElementById("nuevoLibro");
         this.formulario = document.getElementById("formulario");
-        
+
         this.setupEventListeners();
     }
 
@@ -123,19 +145,19 @@ class ModalController {
         const leido = document.getElementById("leido").checked;
 
         this.library.addBook(titulo, autor, paginas, leido);
+        this.libraryView.renderBooks(); // Actualiza la vista directamente
         this.formulario.reset();
         this.modal.close();
     }
 }
 
-// Inicialización
+
 const library = new Library();
 const libraryView = new LibraryView(library);
-const modalController = new ModalController(library);
+const modalController = new ModalController(library, libraryView);
 
-// Conectar la vista con la biblioteca
-library.addObserver(libraryView);
+libraryView.renderBooks();
 
-// Agregar libros de ejemplo
 library.addBook("El señor de los anillos", "J.R.R. Tolkien", 1178, true);
 library.addBook("1984", "George Orwell", 328, false);
+libraryView.renderBooks();
